@@ -4,7 +4,10 @@ angular.module('holomuaBackendApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
       'title': 'Home',
-      'link': '/'
+      'state': 'main'
+    },{
+      'title': 'Places',
+      'state': 'listPlaces'
     }];
 
     $scope.isCollapsed = true;
@@ -16,8 +19,5 @@ angular.module('holomuaBackendApp')
       Auth.logout();
       $location.path('/login');
     };
-
-    $scope.isActive = function(route) {
-      return route === $location.path();
-    };
+    
   });
