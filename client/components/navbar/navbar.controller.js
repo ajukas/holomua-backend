@@ -6,8 +6,8 @@ angular.module('holomuaBackendApp')
       'title': 'Home',
       'state': 'main'
     },{
-      'title': 'Places',
-      'state': 'listPlaces'
+      'title': 'Cities',
+      'state': 'listCities'
     }];
 
     $scope.isCollapsed = true;
@@ -19,5 +19,5 @@ angular.module('holomuaBackendApp')
       Auth.logout();
       $location.path('/login');
     };
-    
+
   });

@@ -1,0 +1,37 @@
+<div class="container" ng-init="City.init()">
+  <form>
+    <uib-alert type="{{City.alert.type}}" close="close()" ng-show="City.alert.type !== ''">
+      {{City.alert.msg}}
+    </uib-alert>
+    <fieldset class="form-group">
+      <label>Name</label>
+      <input type="text" ng-model="City.model.name" class="form-control" cityholder="Name">
+    </fieldset>
+    <fieldset class="form-group">
+      <label>Description</label>
+      <input type="text" ng-model="City.model.description" class="form-control" cityholder="Description">
+    </fieldset>
+    <fieldset class="form-group">
+      <label>GooglecitysKey</label>
+      <input type="text" ng-model="City.model.googlePlacesKey" class="form-control" cityholder="GooglecitysKey">
+    </fieldset>
+    <fieldset class="form-group">
+      <label>CrawlerStatus</label>
+      <input type="text" ng-model="City.model.crawlerStatus" class="form-control" cityholder="GooglecitysKey">
+    </fieldset>
+    <fieldset class="form-group">
+      <div class="row">
+        <div class="col-sm-6">
+          <label>Latitude</label>
+          <input type="text" ng-model="City.model.location.lat" class="form-control" cityholder="Latitude">
+        </div>
+        <div class="col-sm-6">
+          <label>Longitude</label>
+          <input type="text" ng-model="City.model.location.lng" class="form-control" cityholder="Longitude">
+        </div>
+      </div>
+    </fieldset>
+    <button type="submit" class="btn btn-danger" ui-sref="listCities">Back</button>
+    <button type="submit" class="btn btn-primary" ng-click="City.save()">Save</button>
+  </form>
+</div>

@@ -4,7 +4,6 @@ angular.module('holomuaBackendApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngMaterial',
   'ui.router',
   'ui.bootstrap'
 ])

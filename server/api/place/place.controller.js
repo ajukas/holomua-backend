@@ -2,8 +2,9 @@
 
 var _ = require('lodash');
 var Place = require('./place.model');
+var Place = require('../place/place.model');
 
-// Get list of places
+// Get list of Places
 exports.index = function(req, res) {
   Place.find(function (err, places) {
     if(err) { return handleError(res, err); }
@@ -11,7 +12,7 @@ exports.index = function(req, res) {
   });
 };
 
-// Get a single place
+// Get a single Place
 exports.show = function(req, res) {
   Place.findById(req.params.id, function (err, place) {
     if(err) { return handleError(res, err); }
@@ -20,7 +21,7 @@ exports.show = function(req, res) {
   });
 };
 
-// Creates a new place in the DB.
+// Creates a new Place in the DB.
 exports.create = function(req, res) {
   Place.create(req.body, function(err, place) {
     if(err) { return handleError(res, err); }
@@ -28,7 +29,7 @@ exports.create = function(req, res) {
   });
 };
 
-// Updates an existing place in the DB.
+// Updates an existing Place in the DB.
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Place.findById(req.params.id, function (err, place) {
@@ -42,7 +43,7 @@ exports.update = function(req, res) {
   });
 };
 
-// Deletes a place from the DB.
+// Deletes a Place from the DB.
 exports.destroy = function(req, res) {
   Place.findById(req.params.id, function (err, place) {
     if(err) { return handleError(res, err); }

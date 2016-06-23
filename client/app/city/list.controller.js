@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('holomuaBackendApp')
-  .controller('PlaceCtrl', function ($scope, Place, PlaceService) {
+  .controller('CityListCtrl', function ($scope, Cities, CityService) {
 
     var vm = this;
 
     vm.init = function(){
-      vm.model = Place;
+      vm.all = Cities;
     };
 
   }

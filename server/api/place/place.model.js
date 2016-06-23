@@ -5,8 +5,8 @@ var mongoose = require('mongoose'),
 
 var PlaceSchema = new Schema({
   name: String,
-  description: String,
-  active: Boolean
+  placeId: {type: String, unique: true},
+  city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' },
 });
 
 module.exports = mongoose.model('Place', PlaceSchema);
