@@ -13,6 +13,7 @@
         <thead>
           <tr>
             <th>Name</th>
+            <th>ApiKey</th>
             <th>GoogleKey</th>
             <th>Description</th>
             <th>Action</th>
@@ -21,6 +22,7 @@
         <tbody>
           <tr ng-repeat="city in Cities.all">
             <td>{{city.name}}</td>
+            <td>{{city.apiKey}}</td>
             <td>{{city.googlePlacesKey}}</td>
             <td>{{city.description}}</td>
             <td>

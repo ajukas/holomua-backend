@@ -7,22 +7,12 @@ var googleAPI = require('../../components/placesAPIWebService');
 
 // Start a city crawler
 exports.crawler = function(req, res) {
-  City.findOne({googlePlacesKey: req.params.city}, function (err, city) {
+  City.findOne({apiKey: req.params.city}, function (err, city) {
     if(err) { return handleError(res, err); }
-    googleAPI.getPlaces(city.location).then(function(result){
-      city.crawlerStatus = City.crawlerStatus.start;
-      city.save(function (err) {
-        if (err) { return handleError(res, err); }
-        city.crawl(result);
-        return res.status(200).json(city);
-      });
+    city.crawl(req.query.t, function(err, result){
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(city);
     });
-    // //Start Crawler
-    // if (-1 != startCrawlerStatus.indexOf(city.crawlerStatus)) {
-    //
-    // } else {
-    //   return res.status(200).json(city);
-    // }
   });
 };
 
