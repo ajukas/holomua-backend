@@ -1,4 +1,4 @@
-/**business
+/**
  * StaFe crawler
  */
 'use strict';
@@ -9,6 +9,7 @@ var self = this;
 var request = require('request');
 var cheerio = require('cheerio');
 var Place = require('../../api/place/place.model');
+var util = require('util');
 
 StaFe.start = function(calangoRequest, city){
   // crawAcesantafe('a', city);
@@ -26,45 +27,73 @@ function crawListao(query, city){
     var places = [];
     $('.estabelecimento_info').each(function(i, elem){
       var place = {
-        name: $(this).children('.estabelecimentoListaItemTitulo').text().trim(),
-        phones: [$(this).children('.estabelecimentoListaItemTelefone').children('.tel_estab exibir_tel_estab_'+i).text().trim()],
+        name:    $(this).children('.estabelecimentoListaItemTitulo').text().trim(),
+        placeId: $(this).children('.estabelecimentoListaItemTitulo').text().trim(),
+        phones: [],
+        source: 'listao',
         category: category
       }
-      console.log($(this).children('.estabelecimentoListaItemTelefone')).children();
+      $(this).children('.estabelecimentoListaItemTelefone').each(function(i, elem){
+        _.forEach($(this).children('.tel_estab').text().split('*'), function(phone){
+          place.phones.push(phone.trim());
+        });
+      });
+      var address = $(this).children('.estabelecimentoListaItemEndereco').text().trim().replace(/(\r\n|\n|\r)/gm,"").split(',');
+      place.street = address[0];
+      var complements = address[1].split(' - ');
+      place.number =   _.isNil(complements[0]) ? '' : complements[0].trim();
+      place.cityName = _.isNil(complements[1]) ? '' : complements[1].trim();;
+      place.state =    _.isNil(complements[2]) ? '' : complements[2].trim();;
+      place.cep =      _.isNil(complements[3]) ? '' : complements[3].trim();;
+      places.push(place);
     });
 
-    // if ($('.estabelecimentoEmpty').text() == '') {
-    //   query.page += 1;
-    //   crawListao(query, city);
-    // } else if (query.category <= 30) {
-    //   query.page = 1;
-    //   query.category += 1;
-    //   crawListao(query, city);
-    // }
+    bulkInsertPlaces(places, city, 'listao', function(err, result){
+
+      if ($('.estabelecimentoEmpty').text() == '') {
+        query.page += 1;
+        crawListao(query, city);
+      } else if (query.category <= 30) {
+        query.page = 1;
+        query.category += 1;
+        crawListao(query, city);
+      }
+
+    });
+
   });
 };
 
 function bulkInsertPlaces(places, city, source, callback){
   var bulk = Place.collection.initializeOrderedBulkOp();
+  console.log(places);
   _.forEach(places, function(place){
-    bulk.find({placeId: place.placeId, source: source}).upsert().updateOne({
+    bulk.find({name: place.name, source: source}).upsert().updateOne({
       name:     place.name,
       placeId:  place.placeId,
       street:   place.street,
       number:   place.number,
       phones:   place.phones,
       cityName: place.cityName,
+      state:    place.state,
+      cep:      place.cep,
       category: place.category,
       source:   place.source,
       city: city._id
     });
   });
-  bulk.execute(function(err, result){
-    console.log("Inserted:  "+result.nInserted);
-    console.log("nUpserted: "+result.nUpserted);
-    console.log('Inserted register StaFe');
-    callback(err, result);
-  });
+  if (places.length > 0) {
+    bulk.execute(function(err, result){
+      if (err) { console.log(err.toString()); }
+      console.log("Inserted:  "+result.nInserted);
+      console.log("nUpserted: "+result.nUpserted);
+      console.log('Inserted register StaFe');
+      callback(err, result);
+    });
+  } else {
+    callback(false, places);
+  }
+
 };
 
 function crawAcesantafe(query, city){
