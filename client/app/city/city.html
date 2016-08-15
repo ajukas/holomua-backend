@@ -5,37 +5,79 @@
     </uib-alert>
     <fieldset class="form-group">
       <label>Name</label>
-      <input type="text" ng-model="City.model.name" class="form-control" cityholder="Name">
+      <input type="text" ng-model="City.model.name" class="form-control" placeholder="Name">
     </fieldset>
     <fieldset class="form-group">
       <label>Description</label>
-      <input type="text" ng-model="City.model.description" class="form-control" cityholder="Description">
+      <input type="text" ng-model="City.model.description" class="form-control" placeholder="Description">
     </fieldset>
     <fieldset class="form-group">
       <label>GooglecitysKey</label>
-      <input type="text" ng-model="City.model.googlePlacesKey" class="form-control" cityholder="GooglecitysKey">
+      <input type="text" ng-model="City.model.googlePlacesKey" class="form-control" placeholder="GooglecitysKey">
     </fieldset>
     <fieldset class="form-group">
       <label>APIKey</label>
-      <input type="text" ng-model="City.model.apiKey" class="form-control" cityholder="GooglecitysKey">
+      <input type="text" ng-model="City.model.apiKey" class="form-control" placeholder="GooglecitysKey">
     </fieldset>
     <fieldset class="form-group">
       <label>CrawlerStatus</label>
-      <input type="text" ng-model="City.model.crawlerStatus" class="form-control" cityholder="GooglecitysKey">
+      <input type="text" ng-model="City.model.crawlerStatus" class="form-control" placeholder="GooglecitysKey">
     </fieldset>
     <fieldset class="form-group">
       <div class="row">
         <div class="col-sm-6">
           <label>Latitude</label>
-          <input type="text" ng-model="City.model.location.lat" class="form-control" cityholder="Latitude">
+          <input type="text" ng-model="City.model.location.lat" class="form-control" placeholder="Latitude">
         </div>
         <div class="col-sm-6">
           <label>Longitude</label>
-          <input type="text" ng-model="City.model.location.lng" class="form-control" cityholder="Longitude">
+          <input type="text" ng-model="City.model.location.lng" class="form-control" placeholder="Longitude">
         </div>
       </div>
     </fieldset>
-    <button type="submit" class="btn btn-danger" ui-sref="listCities">Back</button>
+    <fieldset class="form-group">
+      <div class="row">
+        <div class="col-sm-12">
+          <label>Categories</label>
+        </div>
+        <div class="col-sm-11">
+          <input type="text" ng-model="City.category" class="form-control" placeholder="type a category"/>
+        </div>
+        <div class="col-sm-1">
+          <button type="button" class="btn btn-default" ng-click="City.addCategory()">Add</button>
+        </div>
+        <div class="col-sm-12">
+          <uib-alert type="danger" ng-show="City.categoryMessage !== ''">
+            {{City.categoryMessage}}
+          </uib-alert>
+        </div>
+        <div class="col-sm-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th class="col-sm-1">#Index</th>
+                <th class="col-sm-10">Category</th>
+                <th class="col-sm-1 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="category in City.model.categories track by $index">
+                <th class="col-sm-1">{{$index+1}}</th>
+                <td class="col-sm-10">{{category}}</td>
+                <td class="col-sm-1 text-center">
+                  <button class="btn btn-xs"
+                    type="button"
+                    ng-click="City.model.categories.splice($index, 1)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </fieldset>
+    <button type="button" class="btn btn-danger" ui-sref="listCities">Back</button>
     <button type="submit" class="btn btn-primary" ng-click="City.save()">Save</button>
   </form>
 </div>

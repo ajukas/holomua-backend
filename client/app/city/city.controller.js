@@ -9,6 +9,8 @@ angular.module('holomuaBackendApp')
       type: '',
       msg: ''
     };
+    vm.model.category = '';
+    vm.categoryMessage = '';
 
     vm.init = function(){
       vm.model = City;
@@ -27,7 +29,22 @@ angular.module('holomuaBackendApp')
         vm.alert.type = 'danger';
         vm.alert.msg = err;
       });
-    }
+    };
+
+    vm.addCategory = function(){
+      if ('' === vm.category || _.isNil(vm.category)) {
+        vm.categoryMessage = 'Vaziu';
+      } else if (
+        _.findIndex(vm.model.categories, function(pos){
+          return pos === vm.category;
+        }) !== -1) {
+        vm.categoryMessage = 'Repetido krai';
+      } else  {
+        vm.model.categories.push(vm.category);
+        vm.category = '';
+        vm.categoryMessage = '';
+      }
+    };
 
   }
 );

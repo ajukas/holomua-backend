@@ -10,6 +10,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var Place = require('../../api/place/place.model');
 var util = require('util');
+var iconv = require('iconv-lite');
 
 StaFe.start = function(calangoRequest, city){
   // crawAcesantafe('a', city);
@@ -18,11 +19,12 @@ StaFe.start = function(calangoRequest, city){
 
 function crawListao(query, city){
   var getRequest = {
+    encoding: null,
     url:'http://listao.net/plus/modulos/conteudo/?tac=estabelecimentos&busca_from=categoria&filter_categoria='+query.category+'&pagina='+query.page
   };
   console.log("Starting StaFe Crawler for Query: "+query.category+" Page:"+query.page);
   request.get(getRequest, function(error, response, body){
-    var $ = cheerio.load(body);
+    var $ = cheerio.load(iconv.decode(body, 'ISO-8859-1'));
     var category = $('h1').text();
     var places = [];
     $('.estabelecimento_info').each(function(i, elem){
@@ -42,9 +44,9 @@ function crawListao(query, city){
       place.street = address[0];
       var complements = address[1].split(' - ');
       place.number =   _.isNil(complements[0]) ? '' : complements[0].trim();
-      place.cityName = _.isNil(complements[1]) ? '' : complements[1].trim();;
-      place.state =    _.isNil(complements[2]) ? '' : complements[2].trim();;
-      place.cep =      _.isNil(complements[3]) ? '' : complements[3].trim();;
+      place.cityName = _.isNil(complements[1]) ? '' : complements[1].trim();
+      place.state =    _.isNil(complements[2]) ? '' : complements[2].trim();
+      place.cep =      _.isNil(complements[3]) ? '' : complements[3].trim();
       places.push(place);
     });
 
@@ -66,7 +68,6 @@ function crawListao(query, city){
 
 function bulkInsertPlaces(places, city, source, callback){
   var bulk = Place.collection.initializeOrderedBulkOp();
-  console.log(places);
   _.forEach(places, function(place){
     bulk.find({name: place.name, source: source}).upsert().updateOne({
       name:     place.name,

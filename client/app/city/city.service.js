@@ -15,6 +15,7 @@ angular.module('holomuaBackendApp').service('CityService', function($resource, $
     _city['name']        = '';
     _city['description'] = '';
     _city['googlecitysKey'] = '';
+    _city['categories'] = [];
   };
 
   this.get = function(){

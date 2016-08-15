@@ -15,11 +15,13 @@ var Calango = require('../../components/calango');
 
 var CitySchema = new Schema({
   name: String,
+  __v: {type: Number, select: false},//Exclude versioning from select
   description: String,
   googlePlacesKey: {type: String, unique: true},
   apiKey: {type: String, unique: true},
   active: Boolean,
   crawlerStatus: {type: String, default: crawlerStatus.new},
+  categories: [String],
   location: {
     lat: Number,
     lng: Number
