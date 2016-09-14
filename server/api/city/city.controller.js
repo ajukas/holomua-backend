@@ -8,6 +8,8 @@ var archiver = require('archiver');
 var zipArchive = archiver('zip');
 var startCrawlerStatus = [City.crawlerStatus.done, City.crawlerStatus.new];
 var googleAPI = require('../../components/placesAPIWebService');
+var zip = new require('node-zip')();
+var fs = require("fs");
 
 // Start a city crawler
 exports.crawler = function(req, res) {
@@ -45,6 +47,12 @@ exports.places = function(req, res) {
       var result = city.toObject();
       result.places = places;
       if(err) { return handleError(res, err); }
+      if (req.query.f === 'true'){
+        var fileName = req.params.apiKey+'_'+req.query.s;
+        zip.file(fileName+'.txt', JSON.stringify(result));
+        var data = zip.generate({base64:false,compression:'DEFLATE'});
+        fs.writeFileSync(fileName+'.zip', data, 'binary');
+      }
       return res.status(200).json(result);
     }).select("name street number cityName state cep category phones");
   });
